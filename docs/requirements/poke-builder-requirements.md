@@ -39,3 +39,4 @@ Built upon the [PokeAPI](https://pokeapi.co/), this app allows you to customize 
 - Must use the [REST PokeAPI v2](https://pokeapi.co/) for reference. Do not use any existing Flutter/Kotlin packages that use PokeAPI directly.
 - May use Flutter [path_provider](https://pub.dev/packages/path_provider) or any other persistence libraries.
 - Must use Riverpod or your own state management system. Do not use GetX, BLoC or other system.
+- Use GoRouter for any navigation
