@@ -7,8 +7,7 @@ plugins {
 
 android {
     namespace = "com.example.poke_builder"
-    compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    compileSdk = 36
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -24,8 +23,8 @@ android {
         applicationId = "com.example.poke_builder"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = flutter.minSdkVersion
-        targetSdk = flutter.targetSdkVersion
+        minSdk = 31
+        targetSdk = 36
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }

@@ -1,0 +1,149 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../providers/team_provider.dart';
+import '../widgets/pokemon_slot.dart';
+import '../dialogs/pokemon_search_dialog.dart';
+import '../dialogs/load_team_dialog.dart';
+import '../dialogs/save_team_dialog.dart';
+
+class TeamBuilderScreen extends ConsumerWidget {
+  const TeamBuilderScreen({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final team = ref.watch(teamProvider);
+    final teamName = ref.watch(currentTeamNameProvider);
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(teamName),
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.search),
+            onPressed: () => _showSearchDialog(context, ref),
+            tooltip: 'Search Pokemon',
+          ),
+          IconButton(
+            icon: const Icon(Icons.folder_open),
+            onPressed: () => _showLoadDialog(context, ref),
+            tooltip: 'Load Team',
+          ),
+          IconButton(
+            icon: const Icon(Icons.save),
+            onPressed: team.isEmpty
+                ? null
+                : () => _showSaveDialog(context, ref),
+            tooltip: 'Save Team',
+          ),
+        ],
+      ),
+      body: Center(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Team grid (3 rows x 2 columns)
+              ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 600),
+                child: GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 16,
+                    mainAxisSpacing: 16,
+                    childAspectRatio: 0.85,
+                  ),
+                  itemCount: 6,
+                  itemBuilder: (context, index) {
+                    final pokemon = index < team.length ? team[index] : null;
+                    return PokemonSlot(
+                      pokemon: pokemon,
+                      onRemove: pokemon != null
+                          ? () => _removePokemon(ref, index)
+                          : null,
+                      onTap: pokemon == null
+                          ? () => _showSearchDialog(context, ref)
+                          : null,
+                    );
+                  },
+                ),
+              ),
+
+              const SizedBox(height: 24),
+
+              // Team count
+              Text(
+                '${team.length}/6 Pokemon',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+
+              const SizedBox(height: 16),
+
+              // Clear team button
+              if (team.isNotEmpty)
+                ElevatedButton.icon(
+                  onPressed: () => _clearTeam(context, ref),
+                  icon: const Icon(Icons.clear_all),
+                  label: const Text('Clear Team'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    foregroundColor: Colors.white,
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _showSearchDialog(context, ref),
+        tooltip: 'Add Pokemon',
+        child: const Icon(Icons.add),
+      ),
+    );
+  }
+
+  void _showSearchDialog(BuildContext context, WidgetRef ref) {
+    showDialog(
+      context: context,
+      builder: (context) => const PokemonSearchDialog(),
+    );
+  }
+
+  void _showLoadDialog(BuildContext context, WidgetRef ref) {
+    showDialog(context: context, builder: (context) => const LoadTeamDialog());
+  }
+
+  void _showSaveDialog(BuildContext context, WidgetRef ref) {
+    showDialog(context: context, builder: (context) => const SaveTeamDialog());
+  }
+
+  void _removePokemon(WidgetRef ref, int index) {
+    ref.read(teamProvider.notifier).removePokemon(index);
+  }
+
+  void _clearTeam(BuildContext context, WidgetRef ref) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Clear Team'),
+        content: const Text('Are you sure you want to clear your team?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              ref.read(teamProvider.notifier).clearTeam();
+              Navigator.pop(context);
+            },
+            child: const Text('Clear'),
+          ),
+        ],
+      ),
+    );
+  }
+}
