@@ -154,9 +154,9 @@ Uses GoRouter for declarative routing:
 6. UI rebuilds with new team
 
 ### Intent Handling (Android)
-1. External app/ADB sends intent to MainActivity
-2. MainActivity.kt receives intent via onNewIntent
-3. Intent action mapped to method channel call
+1. External app/ADB sends broadcast
+2. PokemonBroadcastReceiver receives broadcast (only if app is running)
+3. Broadcast action mapped to method channel call
 4. IntentService receives method call
 5. Operates on teamProvider via ref
 6. Returns success/error response
@@ -168,11 +168,15 @@ Uses GoRouter for declarative routing:
 - Bidirectional communication between Kotlin and Dart
 - Method calls: `addPokemon`, `removePokemon`, `saveTeam`, `clearTeam`
 
-### Intent Actions
-- `com.example.poke_builder.ADD_POKEMON`
-- `com.example.poke_builder.REMOVE_POKEMON`
-- `com.example.poke_builder.SAVE_TEAM`
-- `com.example.poke_builder.CLEAR_TEAM`
+### Broadcast Receiver
+- Registered in MainActivity when app starts
+- Unregistered when app is destroyed
+- Only receives broadcasts while app is running
+- Actions:
+  - `com.example.poke_builder.ADD_POKEMON`
+  - `com.example.poke_builder.REMOVE_POKEMON`
+  - `com.example.poke_builder.SAVE_TEAM`
+  - `com.example.poke_builder.CLEAR_TEAM`
 
 See [INTENT_API.md](../INTENT_API.md) for detailed usage.
 

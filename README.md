@@ -92,28 +92,29 @@ flutter run -d <device-id>
 
 Click the "Clear Team" button and confirm to remove all Pokemon.
 
-## Android Intent API
+## Android Broadcast API
 
-Poke Builder can be controlled externally via Android intents! This allows you to integrate with ADB or other Android applications.
+Poke Builder can be controlled externally via Android broadcasts **while the app is running**! This allows you to integrate with ADB or other Android applications.
 
-See [Intent API Documentation](docs/INTENT_API.md) for detailed information.
+⚠️ **The app must be running for broadcasts to work.**
+
+See [Broadcast API Documentation](docs/INTENT_API.md) for detailed information.
 
 ### Quick Examples
 
 ```bash
+# Make sure the app is running first!
+
 # Add Pikachu to the team
-adb shell am start -n com.example.poke_builder/.MainActivity \
-  -a com.example.poke_builder.ADD_POKEMON \
+adb shell am broadcast -a com.example.poke_builder.ADD_POKEMON \
   --es pokemon_name "pikachu"
 
 # Save the current team
-adb shell am start -n com.example.poke_builder/.MainActivity \
-  -a com.example.poke_builder.SAVE_TEAM \
+adb shell am broadcast -a com.example.poke_builder.SAVE_TEAM \
   --es team_name "My Dream Team"
 
 # Clear the team
-adb shell am start -n com.example.poke_builder/.MainActivity \
-  -a com.example.poke_builder.CLEAR_TEAM
+adb shell am broadcast -a com.example.poke_builder.CLEAR_TEAM
 ```
 
 ## Architecture
