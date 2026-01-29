@@ -5,8 +5,9 @@ class PokemonSlot extends StatelessWidget {
   final Pokemon? pokemon;
   final VoidCallback? onRemove;
   final VoidCallback? onTap;
+  final StackFit? stackFit;
 
-  const PokemonSlot({super.key, this.pokemon, this.onRemove, this.onTap});
+  const PokemonSlot({super.key, this.pokemon, this.onRemove, this.onTap, this.stackFit});
 
   Color _getTypeColor(String typeName) {
     switch (typeName.toLowerCase()) {
@@ -86,11 +87,11 @@ class PokemonSlot extends StatelessWidget {
           ],
         ),
         child: Stack(
+          fit: stackFit ?? StackFit.expand,
           children: [
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Pokemon sprite
                 if (pokemon!.spriteUrl.isNotEmpty)
                   Expanded(
                     flex: 2,
@@ -103,7 +104,6 @@ class PokemonSlot extends StatelessWidget {
                     ),
                   ),
 
-                // Pokemon number
                 Text(
                   '#${pokemon!.id.toString().padLeft(3, '0')}',
                   style: TextStyle(
@@ -115,7 +115,6 @@ class PokemonSlot extends StatelessWidget {
 
                 const SizedBox(height: 4),
 
-                // Pokemon name
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 4),
                   child: Text(
@@ -132,7 +131,6 @@ class PokemonSlot extends StatelessWidget {
 
                 const SizedBox(height: 4),
 
-                // Pokemon types
                 Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 4,

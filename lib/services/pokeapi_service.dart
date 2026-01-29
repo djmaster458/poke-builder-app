@@ -6,6 +6,8 @@ class PokeApiService {
   static const String baseUrl = 'https://pokeapi.co/api/v2';
 
   /// Fetches a Pokemon by name or ID
+  /// Returns null if the Pokemon is not found
+  /// Throws an exception for other errors
   Future<Pokemon?> getPokemon(String nameOrId) async {
     try {
       final uri = Uri.parse('$baseUrl/pokemon/${nameOrId.toLowerCase()}');
@@ -25,11 +27,13 @@ class PokeApiService {
   }
 
   /// Fetches a Pokemon by ID
+  /// See [getPokemon] for details
   Future<Pokemon?> getPokemonById(int id) async {
     return getPokemon(id.toString());
   }
 
   /// Fetches a Pokemon by name
+  /// See [getPokemon] for details
   Future<Pokemon?> getPokemonByName(String name) async {
     return getPokemon(name);
   }

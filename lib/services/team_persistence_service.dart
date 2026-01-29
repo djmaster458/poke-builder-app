@@ -17,6 +17,7 @@ class TeamPersistenceService {
   }
 
   /// Saves a team to a file
+  /// Throws an exception if saving fails
   Future<void> saveTeam(PokemonTeam team) async {
     try {
       final dir = await _getTeamsDirectory();
@@ -29,6 +30,7 @@ class TeamPersistenceService {
   }
 
   /// Loads a team from a file by name
+  /// Throws an exception if loading fails
   Future<PokemonTeam?> loadTeam(String teamName) async {
     try {
       final dir = await _getTeamsDirectory();
@@ -45,6 +47,7 @@ class TeamPersistenceService {
   }
 
   /// Lists all saved teams
+  /// Throws an exception if listing fails
   Future<List<String>> listTeams() async {
     try {
       final dir = await _getTeamsDirectory();
@@ -63,6 +66,7 @@ class TeamPersistenceService {
   }
 
   /// Deletes a team file
+  /// Throws an exception if deleting fails
   Future<void> deleteTeam(String teamName) async {
     try {
       final dir = await _getTeamsDirectory();

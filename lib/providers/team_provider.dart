@@ -3,7 +3,6 @@ import '../models/pokemon.dart';
 import '../services/pokeapi_service.dart';
 import '../services/team_persistence_service.dart';
 
-// Service providers
 final pokeApiServiceProvider = Provider<PokeApiService>((ref) {
   return PokeApiService();
 });
@@ -12,7 +11,6 @@ final teamPersistenceServiceProvider = Provider<TeamPersistenceService>((ref) {
   return TeamPersistenceService();
 });
 
-// Team state provider
 class TeamNotifier extends StateNotifier<List<Pokemon>> {
   TeamNotifier() : super([]);
 
@@ -57,12 +55,10 @@ final teamProvider = StateNotifierProvider<TeamNotifier, List<Pokemon>>((ref) {
   return TeamNotifier();
 });
 
-// Current team name provider
 final currentTeamNameProvider = StateProvider<String>((ref) {
   return 'My Team';
 });
 
-// Saved teams list provider
 final savedTeamsProvider = FutureProvider<List<String>>((ref) async {
   final service = ref.watch(teamPersistenceServiceProvider);
   return service.listTeams();

@@ -153,7 +153,7 @@ class _PokemonSearchDialogState extends ConsumerState<PokemonSearchDialog> {
                 children: [
                   SizedBox(
                     height: 200,
-                    child: PokemonSlot(pokemon: _searchedPokemon),
+                    child: PokemonSlot(pokemon: _searchedPokemon, stackFit: StackFit.loose),
                   ),
                   const SizedBox(height: 16),
 
