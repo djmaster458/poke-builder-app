@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:poke_builder/utils/constants.dart';
 import '../models/pokemon.dart';
 import '../services/pokeapi_service.dart';
 import '../services/team_persistence_service.dart';
@@ -15,7 +16,7 @@ class TeamNotifier extends StateNotifier<List<Pokemon>> {
   TeamNotifier() : super([]);
 
   void addPokemon(Pokemon pokemon) {
-    if (state.length < 6) {
+    if (state.length < Constants.maxTeamSize) {
       state = [...state, pokemon];
     }
   }
@@ -33,7 +34,7 @@ class TeamNotifier extends StateNotifier<List<Pokemon>> {
   }
 
   void setTeam(List<Pokemon> pokemon) {
-    if (pokemon.length <= 6) {
+    if (pokemon.length <= Constants.maxTeamSize) {
       state = [...pokemon];
     }
   }
@@ -43,7 +44,7 @@ class TeamNotifier extends StateNotifier<List<Pokemon>> {
   }
 
   bool isFull() {
-    return state.length >= 6;
+    return state.length >= Constants.maxTeamSize;
   }
 
   bool hasPokemon(String name) {

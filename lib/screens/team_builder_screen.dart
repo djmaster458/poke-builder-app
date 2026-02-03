@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../providers/team_provider.dart';
 import '../widgets/pokemon_slot.dart';
-import '../dialogs/pokemon_search_dialog.dart';
 import '../dialogs/load_team_dialog.dart';
 import '../dialogs/save_team_dialog.dart';
 
@@ -21,7 +21,7 @@ class TeamBuilderScreen extends ConsumerWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.search),
-            onPressed: () => _showSearchDialog(context, ref),
+            onPressed: () => context.push('/search'),
             tooltip: 'Search Pokemon',
           ),
           IconButton(
@@ -65,7 +65,7 @@ class TeamBuilderScreen extends ConsumerWidget {
                           ? () => _removePokemon(ref, index)
                           : null,
                       onTap: pokemon == null
-                          ? () => _showSearchDialog(context, ref)
+                          ? () => context.push('/search')
                           : null,
                     );
                   },
@@ -98,17 +98,10 @@ class TeamBuilderScreen extends ConsumerWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => _showSearchDialog(context, ref),
+        onPressed: () => context.push('/search'),
         tooltip: 'Add Pokemon',
         child: const Icon(Icons.add),
       ),
-    );
-  }
-
-  void _showSearchDialog(BuildContext context, WidgetRef ref) {
-    showDialog(
-      context: context,
-      builder: (context) => const PokemonSearchDialog(),
     );
   }
 
