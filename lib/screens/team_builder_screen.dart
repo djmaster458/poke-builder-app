@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:poke_builder/dialogs/clear_team_dialog.dart';
 import 'package:poke_builder/utils/constants.dart';
 import '../providers/team_provider.dart';
 import '../widgets/pokemon_slot.dart';
@@ -121,23 +122,7 @@ class TeamBuilderScreen extends ConsumerWidget {
   void _clearTeam(BuildContext context, WidgetRef ref) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Clear Team'),
-        content: const Text('Are you sure you want to clear your team?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () {
-              ref.read(teamProvider.notifier).clearTeam();
-              Navigator.pop(context);
-            },
-            child: const Text('Clear'),
-          ),
-        ],
-      ),
+      builder: (context) => ClearTeamDialog(),
     );
   }
 }
