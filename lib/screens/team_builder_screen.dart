@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:poke_builder/utils/constants.dart';
 import '../providers/team_provider.dart';
 import '../widgets/pokemon_slot.dart';
 import '../dialogs/load_team_dialog.dart';
@@ -56,7 +57,7 @@ class TeamBuilderScreen extends ConsumerWidget {
                     mainAxisSpacing: 16,
                     childAspectRatio: 0.85,
                   ),
-                  itemCount: 6,
+                  itemCount: Constants.maxTeamSize,
                   itemBuilder: (context, index) {
                     final pokemon = index < team.length ? team[index] : null;
                     return PokemonSlot(
@@ -76,7 +77,7 @@ class TeamBuilderScreen extends ConsumerWidget {
 
               // Team count
               Text(
-                '${team.length}/6 Pokemon',
+                '${team.length}/${Constants.maxTeamSize} Pokemon',
                 style: Theme.of(context).textTheme.titleMedium,
               ),
 
@@ -114,7 +115,7 @@ class TeamBuilderScreen extends ConsumerWidget {
   }
 
   void _removePokemon(WidgetRef ref, int index) {
-    ref.read(teamProvider.notifier).removePokemon(index);
+    ref.read(teamProvider.notifier).removePokemonByIndex(index);
   }
 
   void _clearTeam(BuildContext context, WidgetRef ref) {

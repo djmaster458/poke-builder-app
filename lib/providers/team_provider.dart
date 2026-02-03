@@ -12,8 +12,11 @@ final teamPersistenceServiceProvider = Provider<TeamPersistenceService>((ref) {
   return TeamPersistenceService();
 });
 
-class TeamNotifier extends StateNotifier<List<Pokemon>> {
-  TeamNotifier() : super([]);
+class TeamNotifier extends Notifier<List<Pokemon>> {
+  @override
+  List<Pokemon> build() {
+    return [];
+  }
 
   void addPokemon(Pokemon pokemon) {
     if (state.length < Constants.maxTeamSize) {
@@ -21,7 +24,7 @@ class TeamNotifier extends StateNotifier<List<Pokemon>> {
     }
   }
 
-  void removePokemon(int index) {
+  void removePokemonByIndex(int index) {
     if (index >= 0 && index < state.length) {
       state = [...state.sublist(0, index), ...state.sublist(index + 1)];
     }
@@ -52,9 +55,7 @@ class TeamNotifier extends StateNotifier<List<Pokemon>> {
   }
 }
 
-final teamProvider = StateNotifierProvider<TeamNotifier, List<Pokemon>>((ref) {
-  return TeamNotifier();
-});
+final teamProvider = NotifierProvider<TeamNotifier, List<Pokemon>>(TeamNotifier.new);
 
 final currentTeamNameProvider = StateProvider<String>((ref) {
   return 'My Team';

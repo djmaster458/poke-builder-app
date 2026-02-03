@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:poke_builder/dialogs/pokemon_details_dialog.dart';
 import '../models/pokemon.dart';
 import '../providers/team_provider.dart';
 import '../providers/pokemon_search_provider.dart';
 import '../services/pokeapi_service.dart';
-import '../widgets/pokemon_slot.dart';
 
 class PokemonSearchScreen extends ConsumerStatefulWidget {
   const PokemonSearchScreen({super.key});
@@ -23,7 +23,9 @@ class _PokemonSearchScreenState extends ConsumerState<PokemonSearchScreen> {
     super.initState();
     final searchStateAsync = ref.read(pokemonSearchProvider);
     final searchState = searchStateAsync.valueOrNull;
-    _searchController = TextEditingController(text: searchState?.searchQuery ?? '');
+    _searchController = TextEditingController(
+      text: searchState?.searchQuery ?? '',
+    );
 
     _scrollController.addListener(_onScroll);
   }
@@ -75,77 +77,9 @@ class _PokemonSearchScreenState extends ConsumerState<PokemonSearchScreen> {
   }
 
   void _showPokemonDetailsDialog(Pokemon pokemon) {
-    final teamNotifier = ref.read(teamProvider.notifier);
-    final team = ref.read(teamProvider);
-
     showDialog(
       context: context,
-      builder: (context) => Dialog(
-        child: Padding(
-          padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.04),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // Title
-              Text(
-                pokemon.displayName,
-                style: Theme.of(context).textTheme.headlineSmall,
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.02),
-
-              // Pokemon preview using PokemonSlot widget
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.25,
-                child: PokemonSlot(
-                  pokemon: pokemon,
-                  // stackFit: StackFit.loose,
-                ),
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.02),
-
-              // Add to Team button
-              ElevatedButton.icon(
-                onPressed: teamNotifier.isFull() || teamNotifier.hasPokemon(pokemon.name)
-                    ? null
-                    : () {
-                        teamNotifier.addPokemon(pokemon);
-                        Navigator.pop(context); // Close dialog
-                        Navigator.pop(context); // Go back to team builder
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('${pokemon.displayName} added to team!'),
-                            duration: const Duration(seconds: 2),
-                          ),
-                        );
-                      },
-                icon: const Icon(Icons.add),
-                label: Text(
-                  team.length >= 6
-                      ? 'Team is Full'
-                      : teamNotifier.hasPokemon(pokemon.name)
-                          ? 'Already in Team'
-                          : 'Add to Team',
-                ),
-                style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: MediaQuery.of(context).size.width * 0.06,
-                    vertical: MediaQuery.of(context).size.height * 0.015,
-                  ),
-                ),
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-
-              // Close button
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('Close'),
-              ),
-            ],
-          ),
-        ),
-      ),
+      builder: (context) => PokemonDetailsDialog(pokemon: pokemon),
     );
   }
 
@@ -179,7 +113,9 @@ class _PokemonSearchScreenState extends ConsumerState<PokemonSearchScreen> {
                         icon: const Icon(Icons.clear),
                         onPressed: () {
                           _searchController.clear();
-                          ref.read(pokemonSearchProvider.notifier).clearSearch();
+                          ref
+                              .read(pokemonSearchProvider.notifier)
+                              .clearSearch();
                         },
                       )
                     : null,
@@ -229,7 +165,6 @@ class _PokemonSearchScreenState extends ConsumerState<PokemonSearchScreen> {
   }
 
   Widget _buildBody(PokemonSearchState searchState) {
-
     return Column(
       children: [
         if (searchState.isSearching)
@@ -271,7 +206,9 @@ class _PokemonSearchScreenState extends ConsumerState<PokemonSearchScreen> {
                   ),
                   leading: CircleAvatar(
                     radius: 24,
-                    backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                    backgroundColor: Theme.of(
+                      context,
+                    ).colorScheme.primary.withOpacity(0.1),
                     child: Text(
                       '#${item.id}',
                       style: TextStyle(

@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:poke_builder/providers/full_pokemon_list_provider.dart';
 import '../services/pokeapi_service.dart';
 import 'team_provider.dart';
 
@@ -49,10 +50,7 @@ class PokemonSearchNotifier extends AsyncNotifier<PokemonSearchState> {
     // Load initial data
     try {
       final service = ref.read(pokeApiServiceProvider);
-      final response = await service.getPokemonList(
-        offset: 0,
-        limit: _limit,
-      );
+      final response = await service.getPokemonList(offset: 0, limit: _limit);
 
       return PokemonSearchState(
         pokemonList: response.results,
@@ -68,7 +66,9 @@ class PokemonSearchNotifier extends AsyncNotifier<PokemonSearchState> {
 
   Future<void> loadMorePokemon() async {
     final currentState = state.valueOrNull;
-    if (currentState == null || currentState.isSearching || !currentState.hasMore) {
+    if (currentState == null ||
+        currentState.isSearching ||
+        !currentState.hasMore) {
       return;
     }
 
@@ -80,12 +80,14 @@ class PokemonSearchNotifier extends AsyncNotifier<PokemonSearchState> {
       );
 
       final updatedList = [...currentState.pokemonList, ...response.results];
-      state = AsyncValue.data(currentState.copyWith(
-        pokemonList: updatedList,
-        filteredList: updatedList,
-        currentOffset: currentState.currentOffset + _limit,
-        hasMore: response.next != null,
-      ));
+      state = AsyncValue.data(
+        currentState.copyWith(
+          pokemonList: updatedList,
+          filteredList: updatedList,
+          currentOffset: currentState.currentOffset + _limit,
+          hasMore: response.next != null,
+        ),
+      );
     } catch (e, stack) {
       state = AsyncValue.error(e, stack);
     }
@@ -96,29 +98,36 @@ class PokemonSearchNotifier extends AsyncNotifier<PokemonSearchState> {
     if (currentState == null) return;
 
     if (query.isEmpty) {
-      state = AsyncValue.data(currentState.copyWith(
-        isSearching: false,
-        filteredList: currentState.pokemonList,
-        searchQuery: '',
-      ));
+      state = AsyncValue.data(
+        currentState.copyWith(
+          isSearching: false,
+          filteredList: currentState.pokemonList,
+          searchQuery: '',
+        ),
+      );
       return;
     }
 
     // Immediately update state to show we're searching
-    state = AsyncValue.data(currentState.copyWith(
-      isSearching: true,
-      searchQuery: query,
-    ));
+    state = AsyncValue.data(
+      currentState.copyWith(isSearching: true, searchQuery: query),
+    );
 
     try {
-      final service = ref.read(pokeApiServiceProvider);
-      final results = await service.searchPokemonByName(query);
+      final fullPokemonList = await ref.read(fullPokemonListProvider.future);
+      final results = fullPokemonList
+          .where(
+            (item) => item.name.toLowerCase().contains(query.toLowerCase()),
+          )
+          .toList();
 
-      state = AsyncValue.data(currentState.copyWith(
-        filteredList: results,
-        searchQuery: query,
-        isSearching: true,
-      ));
+      state = AsyncValue.data(
+        currentState.copyWith(
+          filteredList: results,
+          searchQuery: query,
+          isSearching: true,
+        ),
+      );
     } catch (e, stack) {
       state = AsyncValue.error(e, stack);
     }
@@ -128,15 +137,17 @@ class PokemonSearchNotifier extends AsyncNotifier<PokemonSearchState> {
     final currentState = state.valueOrNull;
     if (currentState == null) return;
 
-    state = AsyncValue.data(currentState.copyWith(
-      isSearching: false,
-      filteredList: currentState.pokemonList,
-      searchQuery: '',
-    ));
+    state = AsyncValue.data(
+      currentState.copyWith(
+        isSearching: false,
+        filteredList: currentState.pokemonList,
+        searchQuery: '',
+      ),
+    );
   }
 }
 
 final pokemonSearchProvider =
     AsyncNotifierProvider<PokemonSearchNotifier, PokemonSearchState>(() {
-  return PokemonSearchNotifier();
-});
+      return PokemonSearchNotifier();
+    });
