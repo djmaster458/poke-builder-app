@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import '../models/pokemon.dart';
 
@@ -56,7 +57,8 @@ class PokeApiService {
   static const String baseUrl = 'https://pokeapi.co/api/v2';
   static const int defaultLimit = 20;
 
-  /// Fetches a Pokemon by name or ID
+  /// Fetches a Pokemon by [nameOrId], which can be either the Pokemon's name or its ID.
+  /// Returns a [Pokemon] object if found
   /// Returns null if the Pokemon is not found
   /// Throws an exception for other errors
   Future<Pokemon?> getPokemon(String nameOrId) async {
@@ -64,10 +66,10 @@ class PokeApiService {
       final uri = Uri.parse('$baseUrl/pokemon/${nameOrId.toLowerCase()}');
       final response = await http.get(uri);
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == HttpStatus.ok) {
         final json = jsonDecode(response.body) as Map<String, dynamic>;
         return Pokemon.fromJson(json);
-      } else if (response.statusCode == 404) {
+      } else if (response.statusCode == HttpStatus.notFound) {
         return null; // Pokemon not found
       } else {
         throw Exception('Failed to load Pokemon: ${response.statusCode}');
@@ -77,13 +79,13 @@ class PokeApiService {
     }
   }
 
-  /// Fetches a Pokemon by ID
+  /// Fetches a Pokemon by [id]
   /// See [getPokemon] for details
   Future<Pokemon?> getPokemonById(int id) async {
     return getPokemon(id.toString());
   }
 
-  /// Fetches a Pokemon by name
+  /// Fetches a Pokemon by [name]
   /// See [getPokemon] for details
   Future<Pokemon?> getPokemonByName(String name) async {
     return getPokemon(name);
@@ -92,7 +94,7 @@ class PokeApiService {
   /// Fetches a paginated list of Pokemon
   /// [offset] - the starting point in the list (default: 0)
   /// [limit] - number of Pokemon to fetch (default: 20)
-  /// Returns a PokemonListResponse with pagination information
+  /// Returns a [PokemonListResponse] with pagination information
   Future<PokemonListResponse> getPokemonList({
     int offset = 0,
     int limit = defaultLimit,
@@ -101,7 +103,7 @@ class PokeApiService {
       final uri = Uri.parse('$baseUrl/pokemon?offset=$offset&limit=$limit');
       final response = await http.get(uri);
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == HttpStatus.ok) {
         final json = jsonDecode(response.body) as Map<String, dynamic>;
         return PokemonListResponse.fromJson(json);
       } else {
@@ -113,12 +115,13 @@ class PokeApiService {
   }
 
   /// Fetches all Pokemon (up to 10000)
+  /// Returns a list of [PokemonListItem]
   Future<List<PokemonListItem>> fetchAllPokemon() async {
     try {
       final uri = Uri.parse('$baseUrl/pokemon?limit=10000');
       final response = await http.get(uri);
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == HttpStatus.ok) {
         final json = jsonDecode(response.body) as Map<String, dynamic>;
         final listResponse = PokemonListResponse.fromJson(json);
         return listResponse.results;
@@ -130,16 +133,17 @@ class PokeApiService {
     }
   }
 
-  /// Searches for Pokemon by name prefix
+  /// Searches for Pokemon by name prefix or other [query]
   /// This fetches all Pokemon and filters by name on the client side
   /// For a production app, consider using a dedicated search endpoint
+  /// Returns a list of [PokemonListItem] matching the query
   Future<List<PokemonListItem>> searchPokemonByName(String query) async {
     try {
       // Fetch a large list (PokeAPI has ~1000 Pokemon)
       final uri = Uri.parse('$baseUrl/pokemon?limit=10000');
       final response = await http.get(uri);
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == HttpStatus.ok) {
         final json = jsonDecode(response.body) as Map<String, dynamic>;
         final listResponse = PokemonListResponse.fromJson(json);
 

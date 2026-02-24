@@ -2,6 +2,11 @@ import 'package:flutter/material.dart';
 
 /// Returns a color associated with the given Pokémon type name.
 /// If the type name is not recognized, a default grey color is returned.
+/// Example usage:
+/// ```dart
+/// Color fireColor = getPokemonTypeColor('fire'); // returns Colors.red
+/// Color unknownColor = getPokemonTypeColor('unknown'); // returns Colors.grey
+/// ```
 Color getPokemonTypeColor(String typeName) {
   switch (typeName.toLowerCase()) {
     case 'normal':

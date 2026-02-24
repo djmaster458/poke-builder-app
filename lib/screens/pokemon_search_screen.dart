@@ -18,11 +18,15 @@ class _PokemonSearchScreenState extends ConsumerState<PokemonSearchScreen> {
   late final TextEditingController _searchController;
   final _scrollController = ScrollController();
 
+  /// Threshold in pixels to trigger loading more Pokemon when scrolling
+  static const double _scrollThreshold = 200.0;
+
   @override
   void initState() {
     super.initState();
     final searchStateAsync = ref.read(pokemonSearchProvider);
     final searchState = searchStateAsync.valueOrNull;
+
     _searchController = TextEditingController(
       text: searchState?.searchQuery ?? '',
     );
@@ -40,9 +44,10 @@ class _PokemonSearchScreenState extends ConsumerState<PokemonSearchScreen> {
   void _onScroll() {
     final searchStateAsync = ref.read(pokemonSearchProvider);
     final searchState = searchStateAsync.valueOrNull;
+
     if (searchState != null &&
         _scrollController.position.pixels >=
-            _scrollController.position.maxScrollExtent - 200) {
+            _scrollController.position.maxScrollExtent - _scrollThreshold) {
       if (searchState.hasMore && !searchState.isSearching) {
         ref.read(pokemonSearchProvider.notifier).loadMorePokemon();
       }
@@ -173,7 +178,7 @@ class _PokemonSearchScreenState extends ConsumerState<PokemonSearchScreen> {
               horizontal: MediaQuery.of(context).size.width * 0.04,
               vertical: 8,
             ),
-            color: Colors.blue.withOpacity(0.1),
+            color: Colors.blue.withValues(alpha: 0.1),
             child: Row(
               children: [
                 const Icon(Icons.info_outline, size: 16),
@@ -208,7 +213,7 @@ class _PokemonSearchScreenState extends ConsumerState<PokemonSearchScreen> {
                     radius: 24,
                     backgroundColor: Theme.of(
                       context,
-                    ).colorScheme.primary.withOpacity(0.1),
+                    ).colorScheme.primary.withValues(alpha: 0.1),
                     child: Text(
                       '#${item.id}',
                       style: TextStyle(

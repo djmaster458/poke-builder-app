@@ -57,9 +57,19 @@ class TeamNotifier extends Notifier<List<Pokemon>> {
 
 final teamProvider = NotifierProvider<TeamNotifier, List<Pokemon>>(TeamNotifier.new);
 
-final currentTeamNameProvider = StateProvider<String>((ref) {
-  return 'My Team';
-});
+
+class CurrentTeamNameNotifier extends Notifier<String> {
+  @override
+  String build() {
+    return 'My Team';
+  }
+
+  void setTeamName(String name) {
+    state = name;
+  }
+}
+
+final currentTeamNameProvider = NotifierProvider<CurrentTeamNameNotifier, String>(CurrentTeamNameNotifier.new);
 
 final savedTeamsProvider = FutureProvider<List<String>>((ref) async {
   final service = ref.watch(teamPersistenceServiceProvider);

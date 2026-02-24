@@ -1,56 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:poke_builder/utils/utils.dart';
 import '../models/pokemon.dart';
 
+/// Widget that displays a Pokémon in a team slot, showing its sprite, name, types, and a remove button if applicable.
+/// If no Pokémon is assigned to the slot, it shows a placeholder with an "add" icon.
+/// The [onTap] callback is triggered when the slot is tapped, allowing users to select or change the Pokémon.
+/// The [onRemove] callback is triggered when the remove button is tapped, allowing users to remove the Pokémon from the team.
+/// The [stackFit] parameter allows customization of how the stack's children are sized, defaulting to [StackFit.expand] for full coverage of the slot area.
+/// Example usage:
+/// ```dart
+/// PokemonSlot(
+///   pokemon: myPokemon,
+///   onTap: () => openPokemonSelection(),
+///   onRemove: () => removePokemonFromTeam(),
+/// );
+/// ```
 class PokemonSlot extends StatelessWidget {
   final Pokemon? pokemon;
   final VoidCallback? onRemove;
   final VoidCallback? onTap;
   final StackFit? stackFit;
 
+  /// Creates a [PokemonSlot] widget.
   const PokemonSlot({super.key, this.pokemon, this.onRemove, this.onTap, this.stackFit});
-
-  Color _getTypeColor(String typeName) {
-    switch (typeName.toLowerCase()) {
-      case 'normal':
-        return Colors.grey;
-      case 'fire':
-        return Colors.deepOrange;
-      case 'water':
-        return Colors.blue;
-      case 'electric':
-        return Colors.yellow;
-      case 'grass':
-        return Colors.green;
-      case 'ice':
-        return Colors.lightBlue;
-      case 'fighting':
-        return Colors.red;
-      case 'poison':
-        return Colors.purple;
-      case 'ground':
-        return Colors.brown;
-      case 'flying':
-        return Colors.indigo;
-      case 'psychic':
-        return Colors.pink;
-      case 'bug':
-        return Colors.lightGreen;
-      case 'rock':
-        return Colors.grey[700]!;
-      case 'ghost':
-        return Colors.deepPurple;
-      case 'dragon':
-        return Colors.indigo[900]!;
-      case 'dark':
-        return Colors.grey[900]!;
-      case 'steel':
-        return Colors.blueGrey;
-      case 'fairy':
-        return Colors.pinkAccent;
-      default:
-        return Colors.grey;
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -147,7 +119,7 @@ class PokemonSlot extends StatelessWidget {
                           vertical: 2,
                         ),
                         decoration: BoxDecoration(
-                          color: _getTypeColor(typeName),
+                          color: getPokemonTypeColor(typeName),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(

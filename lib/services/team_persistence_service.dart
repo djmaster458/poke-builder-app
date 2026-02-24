@@ -16,7 +16,7 @@ class TeamPersistenceService {
     return teamsDir;
   }
 
-  /// Saves a team to a file
+  /// Saves a [team] to a file
   /// Throws an exception if saving fails
   Future<void> saveTeam(PokemonTeam team) async {
     try {
@@ -29,7 +29,7 @@ class TeamPersistenceService {
     }
   }
 
-  /// Loads a team from a file by name
+  /// Loads a [team] from a file by name
   /// Throws an exception if loading fails
   Future<PokemonTeam?> loadTeam(String teamName) async {
     try {
@@ -46,7 +46,7 @@ class TeamPersistenceService {
     }
   }
 
-  /// Lists all saved teams
+  /// Lists all saved teams filenames
   /// Throws an exception if listing fails
   Future<List<String>> listTeams() async {
     try {
@@ -57,7 +57,7 @@ class TeamPersistenceService {
           .where((file) => file.path.endsWith('.json'))
           .map((file) {
             final fileName = file.path.split('/').last;
-            return fileName.substring(0, fileName.length - 5); // Remove .json
+            return fileName.substring(0, fileName.length - 5);
           })
           .toList();
     } catch (e) {
@@ -65,7 +65,7 @@ class TeamPersistenceService {
     }
   }
 
-  /// Deletes a team file
+  /// Deletes a [teamName] file (without extension)
   /// Throws an exception if deleting fails
   Future<void> deleteTeam(String teamName) async {
     try {

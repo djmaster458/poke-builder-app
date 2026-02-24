@@ -28,14 +28,14 @@ class TeamBuilderScreen extends ConsumerWidget {
           ),
           IconButton(
             icon: const Icon(Icons.folder_open),
-            onPressed: () => _showLoadDialog(context, ref),
+            onPressed: () => _showLoadDialog(context),
             tooltip: 'Load Team',
           ),
           IconButton(
             icon: const Icon(Icons.save),
             onPressed: team.isEmpty
                 ? null
-                : () => _showSaveDialog(context, ref),
+                : () => _showSaveDialog(context),
             tooltip: 'Save Team',
           ),
         ],
@@ -87,7 +87,7 @@ class TeamBuilderScreen extends ConsumerWidget {
               // Clear team button
               if (team.isNotEmpty)
                 ElevatedButton.icon(
-                  onPressed: () => _clearTeam(context, ref),
+                  onPressed: () => _showClearTeamDialog(context),
                   icon: const Icon(Icons.clear_all),
                   label: const Text('Clear Team'),
                   style: ElevatedButton.styleFrom(
@@ -107,11 +107,11 @@ class TeamBuilderScreen extends ConsumerWidget {
     );
   }
 
-  void _showLoadDialog(BuildContext context, WidgetRef ref) {
+  void _showLoadDialog(BuildContext context) {
     showDialog(context: context, builder: (context) => const LoadTeamDialog());
   }
 
-  void _showSaveDialog(BuildContext context, WidgetRef ref) {
+  void _showSaveDialog(BuildContext context) {
     showDialog(context: context, builder: (context) => const SaveTeamDialog());
   }
 
@@ -119,7 +119,7 @@ class TeamBuilderScreen extends ConsumerWidget {
     ref.read(teamProvider.notifier).removePokemonByIndex(index);
   }
 
-  void _clearTeam(BuildContext context, WidgetRef ref) {
+  void _showClearTeamDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (context) => ClearTeamDialog(),
