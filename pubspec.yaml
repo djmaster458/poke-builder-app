@@ -30,21 +30,27 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  
+
   # State management
   flutter_riverpod: ^2.6.1
-  
+
   # Navigation
   go_router: ^14.6.2
-  
+
   # HTTP client
   http: ^1.2.2
-  
+
   # Persistence
   path_provider: ^2.1.5
-  
+
   # JSON serialization
   json_annotation: ^4.9.0
+
+  flutter_package_sample:
+    git:
+      url: https://github.com/djmaster458/flutter-package-sample
+      tag_pattern: v{{version}}
+    version: 0.0.1
 
 dev_dependencies:
   flutter_test:
@@ -56,7 +62,7 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^6.0.0
-  
+
   # JSON code generation
   build_runner: ^2.4.13
   json_serializable: ^6.9.2
