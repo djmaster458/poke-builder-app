@@ -8,7 +8,7 @@ void main() {
 }
 
 /// Wraps the app with a provider that eagerly loads the full Pokémon list on startup.
-/// Allows us to use requireValue and the full pokemon list synchronously in the search screen 
+/// Allows us to use requireValue and the full pokemon list synchronously in the search screen
 /// without needing to handle loading states there.
 class _EagerInitialization extends ConsumerWidget {
   const _EagerInitialization({required this.child});
@@ -19,9 +19,17 @@ class _EagerInitialization extends ConsumerWidget {
     final result = ref.watch(fullPokemonListProvider);
 
     if (result.isLoading) {
-      return const CircularProgressIndicator();
+      return const MaterialApp(
+        home: Scaffold(
+          body: Center(child: CircularProgressIndicator()),
+        ),
+      );
     } else if (result.hasError) {
-      return Center(child: Text('Error loading Pokémon: ${result.error}'));
+      return MaterialApp(
+        home: Scaffold(
+          body: Center(child: Text('Error loading Pokémon: ${result.error}')),
+        ),
+      );
     }
 
     return child;
