@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:poke_builder/utils/constants.dart';
 import '../models/pokemon.dart';
 import '../services/pokeapi_service.dart';
 import '../services/team_persistence_service.dart';
@@ -11,16 +12,19 @@ final teamPersistenceServiceProvider = Provider<TeamPersistenceService>((ref) {
   return TeamPersistenceService();
 });
 
-class TeamNotifier extends StateNotifier<List<Pokemon>> {
-  TeamNotifier() : super([]);
+class TeamNotifier extends Notifier<List<Pokemon>> {
+  @override
+  List<Pokemon> build() {
+    return [];
+  }
 
   void addPokemon(Pokemon pokemon) {
-    if (state.length < 6) {
+    if (state.length < Constants.maxTeamSize) {
       state = [...state, pokemon];
     }
   }
 
-  void removePokemon(int index) {
+  void removePokemonByIndex(int index) {
     if (index >= 0 && index < state.length) {
       state = [...state.sublist(0, index), ...state.sublist(index + 1)];
     }
@@ -33,7 +37,7 @@ class TeamNotifier extends StateNotifier<List<Pokemon>> {
   }
 
   void setTeam(List<Pokemon> pokemon) {
-    if (pokemon.length <= 6) {
+    if (pokemon.length <= Constants.maxTeamSize) {
       state = [...pokemon];
     }
   }
@@ -43,7 +47,7 @@ class TeamNotifier extends StateNotifier<List<Pokemon>> {
   }
 
   bool isFull() {
-    return state.length >= 6;
+    return state.length >= Constants.maxTeamSize;
   }
 
   bool hasPokemon(String name) {
@@ -51,13 +55,21 @@ class TeamNotifier extends StateNotifier<List<Pokemon>> {
   }
 }
 
-final teamProvider = StateNotifierProvider<TeamNotifier, List<Pokemon>>((ref) {
-  return TeamNotifier();
-});
+final teamProvider = NotifierProvider<TeamNotifier, List<Pokemon>>(TeamNotifier.new);
 
-final currentTeamNameProvider = StateProvider<String>((ref) {
-  return 'My Team';
-});
+
+class CurrentTeamNameNotifier extends Notifier<String> {
+  @override
+  String build() {
+    return 'My Team';
+  }
+
+  void setTeamName(String name) {
+    state = name;
+  }
+}
+
+final currentTeamNameProvider = NotifierProvider<CurrentTeamNameNotifier, String>(CurrentTeamNameNotifier.new);
 
 final savedTeamsProvider = FutureProvider<List<String>>((ref) async {
   final service = ref.watch(teamPersistenceServiceProvider);

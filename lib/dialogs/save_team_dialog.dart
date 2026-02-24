@@ -50,8 +50,7 @@ class _SaveTeamDialogState extends ConsumerState<SaveTeamDialog> {
 
       await service.saveTeam(pokemonTeam);
 
-      // Update current team name
-      ref.read(currentTeamNameProvider.notifier).state = teamName;
+      ref.read(currentTeamNameProvider.notifier).setTeamName(teamName);
 
       // Refresh saved teams list
       ref.invalidate(savedTeamsProvider);

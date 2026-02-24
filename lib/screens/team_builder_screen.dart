@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:poke_builder/dialogs/clear_team_dialog.dart';
+import 'package:poke_builder/utils/constants.dart';
 import '../providers/team_provider.dart';
 import '../widgets/pokemon_slot.dart';
-import '../dialogs/pokemon_search_dialog.dart';
 import '../dialogs/load_team_dialog.dart';
 import '../dialogs/save_team_dialog.dart';
 
@@ -21,19 +23,19 @@ class TeamBuilderScreen extends ConsumerWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.search),
-            onPressed: () => _showSearchDialog(context, ref),
+            onPressed: () => context.push('/search'),
             tooltip: 'Search Pokemon',
           ),
           IconButton(
             icon: const Icon(Icons.folder_open),
-            onPressed: () => _showLoadDialog(context, ref),
+            onPressed: () => _showLoadDialog(context),
             tooltip: 'Load Team',
           ),
           IconButton(
             icon: const Icon(Icons.save),
             onPressed: team.isEmpty
                 ? null
-                : () => _showSaveDialog(context, ref),
+                : () => _showSaveDialog(context),
             tooltip: 'Save Team',
           ),
         ],
@@ -56,7 +58,7 @@ class TeamBuilderScreen extends ConsumerWidget {
                     mainAxisSpacing: 16,
                     childAspectRatio: 0.85,
                   ),
-                  itemCount: 6,
+                  itemCount: Constants.maxTeamSize,
                   itemBuilder: (context, index) {
                     final pokemon = index < team.length ? team[index] : null;
                     return PokemonSlot(
@@ -65,7 +67,7 @@ class TeamBuilderScreen extends ConsumerWidget {
                           ? () => _removePokemon(ref, index)
                           : null,
                       onTap: pokemon == null
-                          ? () => _showSearchDialog(context, ref)
+                          ? () => context.push('/search')
                           : null,
                     );
                   },
@@ -76,7 +78,7 @@ class TeamBuilderScreen extends ConsumerWidget {
 
               // Team count
               Text(
-                '${team.length}/6 Pokemon',
+                '${team.length}/${Constants.maxTeamSize} Pokemon',
                 style: Theme.of(context).textTheme.titleMedium,
               ),
 
@@ -85,7 +87,7 @@ class TeamBuilderScreen extends ConsumerWidget {
               // Clear team button
               if (team.isNotEmpty)
                 ElevatedButton.icon(
-                  onPressed: () => _clearTeam(context, ref),
+                  onPressed: () => _showClearTeamDialog(context),
                   icon: const Icon(Icons.clear_all),
                   label: const Text('Clear Team'),
                   style: ElevatedButton.styleFrom(
@@ -98,52 +100,29 @@ class TeamBuilderScreen extends ConsumerWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => _showSearchDialog(context, ref),
+        onPressed: () => context.push('/search'),
         tooltip: 'Add Pokemon',
         child: const Icon(Icons.add),
       ),
     );
   }
 
-  void _showSearchDialog(BuildContext context, WidgetRef ref) {
-    showDialog(
-      context: context,
-      builder: (context) => const PokemonSearchDialog(),
-    );
-  }
-
-  void _showLoadDialog(BuildContext context, WidgetRef ref) {
+  void _showLoadDialog(BuildContext context) {
     showDialog(context: context, builder: (context) => const LoadTeamDialog());
   }
 
-  void _showSaveDialog(BuildContext context, WidgetRef ref) {
+  void _showSaveDialog(BuildContext context) {
     showDialog(context: context, builder: (context) => const SaveTeamDialog());
   }
 
   void _removePokemon(WidgetRef ref, int index) {
-    ref.read(teamProvider.notifier).removePokemon(index);
+    ref.read(teamProvider.notifier).removePokemonByIndex(index);
   }
 
-  void _clearTeam(BuildContext context, WidgetRef ref) {
+  void _showClearTeamDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Clear Team'),
-        content: const Text('Are you sure you want to clear your team?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () {
-              ref.read(teamProvider.notifier).clearTeam();
-              Navigator.pop(context);
-            },
-            child: const Text('Clear'),
-          ),
-        ],
-      ),
+      builder: (context) => ClearTeamDialog(),
     );
   }
 }

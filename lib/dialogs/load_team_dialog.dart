@@ -78,7 +78,7 @@ class LoadTeamDialog extends ConsumerWidget {
 
       if (team != null) {
         ref.read(teamProvider.notifier).setTeam(team.pokemon);
-        ref.read(currentTeamNameProvider.notifier).state = team.name;
+        ref.read(currentTeamNameProvider.notifier).setTeamName(team.name);
 
         if (context.mounted) {
           Navigator.pop(context);
