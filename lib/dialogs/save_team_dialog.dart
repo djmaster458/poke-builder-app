@@ -48,9 +48,9 @@ class _SaveTeamDialogState extends ConsumerState<SaveTeamDialog> {
         updatedAt: DateTime.now(),
       );
 
-      await service.saveTeam(pokemonTeam);
-
       ref.read(currentTeamNameProvider.notifier).setTeamName(teamName);
+
+      await service.saveTeam(pokemonTeam);
 
       // Refresh saved teams list
       ref.invalidate(savedTeamsProvider);
@@ -65,10 +65,12 @@ class _SaveTeamDialogState extends ConsumerState<SaveTeamDialog> {
         );
       }
     } catch (e) {
-      setState(() {
-        _isSaving = false;
-      });
-      _showError('Failed to save team: $e');
+      if (mounted) {
+        setState(() {
+          _isSaving = false;
+        });
+        _showError('Failed to save team: $e');
+      }
     }
   }
 

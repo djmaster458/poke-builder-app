@@ -4,10 +4,12 @@ import '../models/pokemon.dart';
 import '../services/pokeapi_service.dart';
 import '../services/team_persistence_service.dart';
 
+/// Provider to PokeAPI endpoint
 final pokeApiServiceProvider = Provider<PokeApiService>((ref) {
   return PokeApiService();
 });
 
+/// Provider to manage saved teams
 final teamPersistenceServiceProvider = Provider<TeamPersistenceService>((ref) {
   return TeamPersistenceService();
 });
@@ -55,8 +57,8 @@ class TeamNotifier extends Notifier<List<Pokemon>> {
   }
 }
 
+/// Provider to manage the current team state
 final teamProvider = NotifierProvider<TeamNotifier, List<Pokemon>>(TeamNotifier.new);
-
 
 class CurrentTeamNameNotifier extends Notifier<String> {
   @override
@@ -69,8 +71,10 @@ class CurrentTeamNameNotifier extends Notifier<String> {
   }
 }
 
+/// Provider to manage the current team name being edited/saved
 final currentTeamNameProvider = NotifierProvider<CurrentTeamNameNotifier, String>(CurrentTeamNameNotifier.new);
 
+/// Provider to fetch the list of saved team names from persistence
 final savedTeamsProvider = FutureProvider<List<String>>((ref) async {
   final service = ref.watch(teamPersistenceServiceProvider);
   return service.listTeams();

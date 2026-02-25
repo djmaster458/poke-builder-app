@@ -40,19 +40,23 @@ class _PokemonSearchDialogState extends ConsumerState<PokemonSearchDialog> {
       final service = ref.read(pokeApiServiceProvider);
       final pokemon = await service.getPokemon(searchTerm);
 
-      setState(() {
-        if (pokemon != null) {
-          _searchedPokemon = pokemon;
-        } else {
-          _errorMessage = 'Pokemon not found';
-        }
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          if (pokemon != null) {
+            _searchedPokemon = pokemon;
+          } else {
+            _errorMessage = 'Pokemon not found';
+          }
+          _isLoading = false;
+        });
+      }
     } catch (e) {
-      setState(() {
-        _errorMessage = 'Error: ${e.toString()}';
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _errorMessage = 'Error: ${e.toString()}';
+          _isLoading = false;
+        });
+      }
     }
   }
 
@@ -100,7 +104,6 @@ class _PokemonSearchDialogState extends ConsumerState<PokemonSearchDialog> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Title
             Text(
               'Search Pokemon',
               style: Theme.of(context).textTheme.headlineSmall,
@@ -109,7 +112,6 @@ class _PokemonSearchDialogState extends ConsumerState<PokemonSearchDialog> {
 
             const SizedBox(height: 16),
 
-            // Search field
             TextField(
               controller: _controller,
               decoration: InputDecoration(
@@ -127,7 +129,6 @@ class _PokemonSearchDialogState extends ConsumerState<PokemonSearchDialog> {
 
             const SizedBox(height: 16),
 
-            // Loading indicator
             if (_isLoading)
               const Center(
                 child: Padding(
@@ -136,7 +137,6 @@ class _PokemonSearchDialogState extends ConsumerState<PokemonSearchDialog> {
                 ),
               ),
 
-            // Error message
             if (_errorMessage != null && !_isLoading)
               Padding(
                 padding: const EdgeInsets.all(16),
@@ -147,17 +147,18 @@ class _PokemonSearchDialogState extends ConsumerState<PokemonSearchDialog> {
                 ),
               ),
 
-            // Pokemon preview
             if (_searchedPokemon != null && !_isLoading)
               Column(
                 children: [
                   SizedBox(
                     height: 200,
-                    child: PokemonSlot(pokemon: _searchedPokemon, stackFit: StackFit.loose),
+                    child: PokemonSlot(
+                      pokemon: _searchedPokemon,
+                      stackFit: StackFit.loose,
+                    ),
                   ),
                   const SizedBox(height: 16),
 
-                  // Add button
                   ElevatedButton.icon(
                     onPressed: canAdd ? _addToTeam : null,
                     icon: const Icon(Icons.add),
@@ -174,7 +175,6 @@ class _PokemonSearchDialogState extends ConsumerState<PokemonSearchDialog> {
 
             const SizedBox(height: 8),
 
-            // Close button
             TextButton(
               onPressed: () => Navigator.pop(context),
               child: const Text('Close'),

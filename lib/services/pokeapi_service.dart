@@ -132,31 +132,4 @@ class PokeApiService {
       throw Exception('Error fetching all Pokemon: $e');
     }
   }
-
-  /// Searches for Pokemon by name prefix or other [query]
-  /// This fetches all Pokemon and filters by name on the client side
-  /// For a production app, consider using a dedicated search endpoint
-  /// Returns a list of [PokemonListItem] matching the query
-  Future<List<PokemonListItem>> searchPokemonByName(String query) async {
-    try {
-      // Fetch a large list (PokeAPI has ~1000 Pokemon)
-      final uri = Uri.parse('$baseUrl/pokemon?limit=10000');
-      final response = await http.get(uri);
-
-      if (response.statusCode == HttpStatus.ok) {
-        final json = jsonDecode(response.body) as Map<String, dynamic>;
-        final listResponse = PokemonListResponse.fromJson(json);
-
-        // Filter by name
-        final lowerQuery = query.toLowerCase();
-        return listResponse.results
-            .where((item) => item.name.contains(lowerQuery))
-            .toList();
-      } else {
-        throw Exception('Failed to search Pokemon: ${response.statusCode}');
-      }
-    } catch (e) {
-      throw Exception('Error searching Pokemon: $e');
-    }
-  }
 }

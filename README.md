@@ -7,13 +7,11 @@ Your home to building the perfect Pokemon team! Built with Flutter and powered b
 - 🎮 Build Pokemon teams of up to 6 Pokemon
 - 🔍 Search for Pokemon by name or ID
 - 💾 Save and load teams locally
-- 📱 Android intent support for external integrations
-- 🎨 Beautiful UI with type-colored badges
-- 🖼️ Official Pokemon sprites from PokeAPI
 
 ## Screenshots
 
 The app features a 3x2 grid layout for your Pokemon team, with each slot displaying:
+
 - Pokemon sprite (front, non-shiny)
 - Pokemon number
 - Pokemon name
@@ -31,17 +29,20 @@ The app features a 3x2 grid layout for your Pokemon team, with each slot display
 ### Installation
 
 1. Clone the repository:
+
 ```bash
 git clone https://github.com/yourusername/poke_builder.git
 cd poke_builder
 ```
 
-2. Install dependencies:
+1. Install dependencies:
+
 ```bash
 flutter pub get
 ```
 
-3. Generate JSON serialization code:
+1. Generate JSON serialization code:
+
 ```bash
 dart run build_runner build --delete-conflicting-outputs
 ```
@@ -49,16 +50,19 @@ dart run build_runner build --delete-conflicting-outputs
 ### Running the App
 
 #### On Android/iOS
+
 ```bash
 flutter run
 ```
 
 #### On Web
+
 ```bash
 flutter run -d chrome
 ```
 
 #### On specific device
+
 ```bash
 # List available devices
 flutter devices
@@ -92,31 +96,6 @@ flutter run -d <device-id>
 
 Click the "Clear Team" button and confirm to remove all Pokemon.
 
-## Android Broadcast API
-
-Poke Builder can be controlled externally via Android broadcasts **while the app is running**! This allows you to integrate with ADB or other Android applications.
-
-⚠️ **The app must be running for broadcasts to work.**
-
-See [Broadcast API Documentation](docs/INTENT_API.md) for detailed information.
-
-### Quick Examples
-
-```bash
-# Make sure the app is running first!
-
-# Add Pikachu to the team
-adb shell am broadcast -a com.example.poke_builder.ADD_POKEMON \
-  --es pokemon_name "pikachu"
-
-# Save the current team
-adb shell am broadcast -a com.example.poke_builder.SAVE_TEAM \
-  --es team_name "My Dream Team"
-
-# Clear the team
-adb shell am broadcast -a com.example.poke_builder.CLEAR_TEAM
-```
-
 ## Architecture
 
 The app follows a clean architecture pattern with clear separation of concerns:
@@ -140,7 +119,7 @@ For detailed architecture information, see [Architecture Documentation](docs/des
 
 ## Project Structure
 
-```
+```txt
 lib/
 ├── main.dart                    # App entry point
 ├── models/                      # Data models
@@ -171,6 +150,7 @@ dart run build_runner watch --delete-conflicting-outputs
 ### Testing
 
 Run tests:
+
 ```bash
 flutter test
 ```
@@ -178,18 +158,15 @@ flutter test
 ### Building for Production
 
 #### Android APK
+
 ```bash
 flutter build apk --release
 ```
 
 #### Android App Bundle
+
 ```bash
 flutter build appbundle --release
-```
-
-#### iOS
-```bash
-flutter build ios --release
 ```
 
 ## API Reference
@@ -206,11 +183,10 @@ This project is open source and available under the [MIT License](LICENSE).
 
 ## Acknowledgments
 
-- [PokeAPI](https://pokeapi.co/) for providing the Pokemon data
-- The Flutter team for the amazing framework
-- The Pokemon Company for creating Pokemon
+- [PokeAPI](https://pokeapi.co/)
+- Flutter and Dart Teams
+- The Pokemon Company
 
 ## Support
 
 If you encounter any issues or have questions, please file an issue on GitHub.
-
