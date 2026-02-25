@@ -21,7 +21,6 @@ class PokemonDetailsDialog extends ConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Title
             Text(
               pokemon.displayName,
               style: Theme.of(context).textTheme.headlineSmall,
@@ -29,17 +28,14 @@ class PokemonDetailsDialog extends ConsumerWidget {
             ),
             SizedBox(height: MediaQuery.of(context).size.height * 0.02),
 
-            // Pokemon preview using PokemonSlot widget
             SizedBox(
               height: MediaQuery.of(context).size.height * 0.25,
               child: PokemonSlot(
                 pokemon: pokemon,
-                // stackFit: StackFit.loose,
               ),
             ),
             SizedBox(height: MediaQuery.of(context).size.height * 0.02),
 
-            // Add to Team button
             ElevatedButton.icon(
               onPressed:
                   teamNotifier.isFull() || teamNotifier.hasPokemon(pokemon.name)
@@ -73,7 +69,6 @@ class PokemonDetailsDialog extends ConsumerWidget {
             ),
             SizedBox(height: MediaQuery.of(context).size.height * 0.01),
 
-            // Close button
             TextButton(
               onPressed: () => Navigator.pop(context),
               child: const Text('Close'),

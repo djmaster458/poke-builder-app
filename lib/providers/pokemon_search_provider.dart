@@ -3,6 +3,7 @@ import 'package:poke_builder/providers/full_pokemon_list_provider.dart';
 import '../services/pokeapi_service.dart';
 import 'team_provider.dart';
 
+/// State class to hold the current search state
 class PokemonSearchState {
   final List<PokemonListItem> pokemonList;
   final List<PokemonListItem> filteredList;
@@ -39,7 +40,9 @@ class PokemonSearchState {
   }
 }
 
+///
 class PokemonSearchNotifier extends AsyncNotifier<PokemonSearchState> {
+  /// Page limit for API calls - can be adjusted as needed
   static const int _limit = 20;
 
   @override
@@ -133,6 +136,7 @@ class PokemonSearchNotifier extends AsyncNotifier<PokemonSearchState> {
     }
   }
 
+  /// Clears the current search state
   void clearSearch() {
     final currentState = state.valueOrNull;
     if (currentState == null) return;
