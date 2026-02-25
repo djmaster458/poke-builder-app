@@ -178,17 +178,25 @@ This app uses the [PokeAPI v2](https://pokeapi.co/docs/v2) for Pokemon data. No 
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions are welcome! Please feel free to submit a Pull Request or Issue.
 
 ## License
 
 This project is open source and available under the [MIT License](LICENSE).
+
+> [!WARNING]
+> All Pokemon related IP and assets belong to the Pokemon Company which falls under non-commercial use and their licensing.
+> This license is only for this application source code.
+
 
 ## Acknowledgments
 
 - [PokeAPI](https://pokeapi.co/)
 - Flutter and Dart Teams
 - The Pokemon Company
+
+## License
+
 
 ## Support
 
