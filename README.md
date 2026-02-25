@@ -2,6 +2,9 @@
 
 Your home to building the perfect Pokemon team! Built with Flutter and powered by [PokeAPI](https://pokeapi.co/).
 
+<img width="270" height="600" alt="poke-builder-screenshot" src="https://github.com/user-attachments/assets/19165c5e-2f68-4644-aac6-55417baeb2b6" />
+<img width="270" height="600" alt="poke-builder-search" src="https://github.com/user-attachments/assets/e9fb6157-bb8a-45c3-a454-a1f8e85fe166" />
+
 ## Features
 
 - 🎮 Build Pokemon teams of up to 6 Pokemon
